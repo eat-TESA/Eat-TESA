@@ -169,7 +169,7 @@ else:
         col_c1, col_c2 = st.columns(2)
         with col_c1:
             st.subheader("🍕 Comida")
-            st.write("Establecimientos para comer cerca del campus.")
+            st.write("Establecimientos para comer cerca del ITESA.")
             if st.button("Explorar Comida ➔"):
                 st.session_state.categoria_filtro = "Comida"
                 st.session_state.pagina = "mapa"
