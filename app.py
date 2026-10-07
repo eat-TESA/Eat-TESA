@@ -227,15 +227,31 @@ else:
         ).add_to(m)
 
         # Marcador de Referencia: Salida Estacionamiento
+# Marcador de Referencia: Salida Estacionamiento (Compacto y elegante)
         html_estacionamiento = """
-        <div style="background-color:#6c757d; color:white; padding:4px 8px; border-radius:10px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
-            🚗 Salida Estacionamiento
+        <div style="
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(40, 40, 40, 0.85);
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            backdrop-filter: blur(3px);
+        ">
+            <span>🚗</span>
+            <span>Salida Estacionamiento</span>
         </div>
         """
         folium.Marker(
             [ESTACIONAMIENTO_LAT, ESTACIONAMIENTO_LNG],
             popup="<b>Salida Estacionamiento</b>",
-            icon=folium.DivIcon(html=html_estacionamiento)
+            icon=folium.DivIcon(html=html_estacionamiento, icon_size=(150, 24), icon_anchor=(75, 12))
         ).add_to(m)
 
         # Filtrar locales por categoría
