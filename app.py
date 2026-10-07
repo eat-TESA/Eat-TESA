@@ -5,16 +5,23 @@ from streamlit_folium import st_folium
 # Configuración de la página
 st.set_page_config(page_title="eat-TESA", page_icon="🍴", layout="wide")
 
-# Ocultar la barra superior (Fork, GitHub, etc.), la marca de agua inferior derecha y el pie de página
+# CSS avanzado para ocultar la barra superior y la marca de agua flotante de la esquina inferior derecha
 st.markdown("""
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden; display: none !important;}
     header {visibility: hidden;}
-    [data-testid="stHeader"] {display: none;}
-    [data-testid="stStatusWidget"] {display: none;}
+    [data-testid="stHeader"] {display: none !important;}
+    [data-testid="stStatusWidget"] {display: none !important;}
     .stAppToolbar {display: none !important;}
+    
+    /* Ocultar insignia flotante inferior derecha (Hosted with Streamlit / Created by) */
     div[data-testid="stViewerBadge"] {display: none !important;}
+    [class*="viewerBadge"] {display: none !important;}
+    [class*="styles_viewerBadge"] {display: none !important;}
+    .viewerBadge_container__1tA6D {display: none !important;}
+    a[href*="streamlit.io"] {display: none !important;}
+    iframe[title="data_frame"] {display: none !important;}
     </style>
 """, unsafe_allow_html=True)
 
