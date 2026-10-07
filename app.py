@@ -210,7 +210,7 @@ else:
         m = folium.Map(
             location=[centro_lat, centro_lng],
             zoom_start=17,
-            max_zoom=19,
+            max_zoom=18.7,
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri World Imagery",
             max_native_zoom=19
