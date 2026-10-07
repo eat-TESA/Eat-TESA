@@ -1,14 +1,15 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+import hashlib
 
 # Configuración de la página
 st.set_page_config(page_title="eat-TESA", page_icon="🍴", layout="wide")
 
-# CSS para ocultar la barra superior, marcas flotantes y la barra gris de embed ("Built with Streamlit")
+# CSS para ocultar la barra superior, marcas flotantes, código e interfaz de desarrollador
 st.markdown("""
     <style>
-    /* Ocultar menú principal y header */
+    /* Ocultar menú principal, header y barra de herramientas de Streamlit Cloud */
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     [data-testid="stHeader"] {display: none !important;}
@@ -18,18 +19,25 @@ st.markdown("""
     /* Ocultar pie de página estándar */
     footer {visibility: hidden; display: none !important;}
     
-    /* Ocultar la barra gris de Embed ("Built with Streamlit / Fullscreen") */
+    /* Ocultar la barra gris de Embed ("Built with Streamlit / Fullscreen / Edit with GitHub") */
     [data-testid="stEmbedFooter"] {display: none !important;}
     div[class*="embedFooter"] {display: none !important;}
     
-    /* Ocultar insignias flotantes de la esquina inferior derecha */
+    /* Ocultar insignias flotantes y botones de desarrollador */
     div[data-testid="stViewerBadge"] {display: none !important;}
     [class*="viewerBadge"] {display: none !important;}
     [class*="styles_viewerBadge"] {display: none !important;}
     .viewerBadge_container__1tA6D {display: none !important;}
     a[href*="streamlit.io"] {display: none !important;}
+    
+    /* Ocultar opciones de inspección contextual en Streamlit */
+    button[title="View source"] {display: none !important;}
     </style>
 """, unsafe_allow_html=True)
+
+# Función de seguridad para encriptar contraseñas (SHA-256)
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 # Coordenadas de puntos de referencia
 ITESA_LAT, ITESA_LNG = 19.728763, -98.467741
@@ -79,6 +87,10 @@ ESTABLECIMIENTOS = [
     }
 ]
 
+# Base de datos simulación (en producción conectar con Supabase o Firebase)
+if "db_usuarios" not in st.session_state:
+    st.session_state.db_usuarios = {}
+
 # Inicializar estados de sesión
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
@@ -100,8 +112,9 @@ if not st.session_state.autenticado:
     p_login, p_reg = st.tabs(["Iniciar Sesión", "Registrarse"])
 
     with p_login:
-        email_login = st.text_input("Correo Institucional ITESA", placeholder="Correo Institucional")
+        email_login = st.text_input("Correo Institucional ITESA", placeholder="matricula@itesa.edu.mx")
         pass_login = st.text_input("Contraseña", type="password", key="l_pass")
+        
         if st.button("Ingresar a eat-TESA", type="primary"):
             email_clean = email_login.strip().lower()
             if not email_clean.endswith("@itesa.edu.mx"):
@@ -109,14 +122,26 @@ if not st.session_state.autenticado:
             elif not pass_login:
                 st.error("Por favor ingresa tu contraseña.")
             else:
-                st.session_state.autenticado = True
-                st.session_state.usuario_email = email_clean
-                st.rerun()
+                pass_hash = hash_password(pass_login)
+                # Validación de contraseña en base segura
+                if email_clean in st.session_state.db_usuarios:
+                    if st.session_state.db_usuarios[email_clean] == pass_hash:
+                        st.session_state.autenticado = True
+                        st.session_state.usuario_email = email_clean
+                        st.rerun()
+                    else:
+                        st.error("Contraseña incorrecta.")
+                else:
+                    # Permitir acceso directo por primera demostración si pasa la validación de correo
+                    st.session_state.autenticado = True
+                    st.session_state.usuario_email = email_clean
+                    st.rerun()
 
     with p_reg:
         nombre_reg = st.text_input("Nombre Completo")
         email_reg = st.text_input("Correo ITESA (@itesa.edu.mx)", placeholder="matricula@itesa.edu.mx")
         pass_reg = st.text_input("Contraseña", type="password", key="r_pass")
+        
         if st.button("Crear mi Cuenta"):
             email_clean = email_reg.strip().lower()
             if not email_clean.endswith("@itesa.edu.mx"):
@@ -124,7 +149,9 @@ if not st.session_state.autenticado:
             elif len(pass_reg) < 6:
                 st.error("La contraseña debe tener al menos 6 caracteres.")
             else:
-                st.success("¡Cuenta creada!")
+                # Guardar usuario con contraseña cifrada
+                st.session_state.db_usuarios[email_clean] = hash_password(pass_reg)
+                st.success("¡Cuenta creada con éxito!")
                 st.session_state.autenticado = True
                 st.session_state.usuario_email = email_clean
                 st.rerun()
@@ -228,7 +255,7 @@ else:
             icon=folium.DivIcon(html=html_itesa)
         ).add_to(m)
 
-        # Marcador de Referencia: Salida Estacionamiento (Compacto y transparente)
+        # Marcador de Referencia: Salida Estacionamiento
         html_estacionamiento = """
         <div style="
             display: inline-flex;
