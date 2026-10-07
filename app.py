@@ -47,7 +47,7 @@ ESTABLECIMIENTOS = [
         "menu": [("Tacos de pastor", "$15 c/u"), ("Gringas", "$35"),("Guajolotas","$37"),("Sopa instantanea","$37")]
     },
      {
-        "id": 3,
+        "id": 2,
         "nombre": "BILLAR",
         "categoria": "Entretenimiento",
         "lat": 19.727560,
@@ -57,7 +57,7 @@ ESTABLECIMIENTOS = [
         "menu": [("Billar (1 hr)", "$25"), ("Maquinitas", "$1 $5 $10")]
     },
     {
-        "id": 2,
+        "id": 3,
         "nombre": "Carnitas y asados",
         "categoria": "Comida",
         "lat": 19.727710,
@@ -67,7 +67,7 @@ ESTABLECIMIENTOS = [
         "menu": [("Gorditas", "$20"), ("Quesadillas", "$18")]
     },
     {
-        "id": 3,
+        "id": 4,
         "nombre": "Comida rapida",
         "categoria": "Comida",
         "lat": 19.727560,
