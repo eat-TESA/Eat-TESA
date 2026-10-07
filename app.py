@@ -203,4 +203,82 @@ else:
         centro_lat, centro_lng = ITESA_LAT, ITESA_LNG
         if st.session_state.local_seleccionado:
             centro_lat = st.session_state.local_seleccionado["lat"]
-            centro_lng =
+            centro_lng = st.session_state.local_seleccionado["lng"]
+
+        # Crear mapa con capa Satelital ESRI
+        m = folium.Map(
+            location=[centro_lat, centro_lng],
+            zoom_start=17,
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            attr="Esri World Imagery"
+        )
+
+        # Marcador de Entrada ITESA
+        html_itesa = """
+        <div style="background-color:#003049; color:white; padding:4px 8px; border-radius:10px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
+            🏫 ITESA
+        </div>
+        """
+        folium.Marker(
+            [ITESA_LAT, ITESA_LNG],
+            popup="<b>Entrada Principal ITESA</b>",
+            icon=folium.DivIcon(html=html_itesa)
+        ).add_to(m)
+
+        # Filtrar locales por categoría
+        locales_visibles = [
+            l for l in ESTABLECIMIENTOS 
+            if cat_filtro == "Todos" or l["categoria"] == cat_filtro
+        ]
+
+        with col_lista:
+            st.subheader("Establecimientos")
+            st.caption("Selecciona uno para trazar la ruta desde ITESA:")
+
+            for local in locales_visibles:
+                es_seleccionado = (
+                    st.session_state.local_seleccionado is not None and 
+                    st.session_state.local_seleccionado["id"] == local["id"]
+                )
+
+                # Tarjeta del establecimiento con botón de trazado
+                with st.container():
+                    st.markdown(f"### 📍 {local['nombre']}")
+                    st.write(f"**Ubicación:** {local['direccion']}")
+                    st.write(f"**Pago:** {local['pago']}")
+
+                    # Botón para trazar o quitar ruta
+                    if es_seleccionado:
+                        if st.button(f"❌ Ocultar Ruta", key=f"btn_{local['id']}"):
+                            st.session_state.local_seleccionado = None
+                            st.rerun()
+                    else:
+                        if st.button(f"🗺️ Trazar Ruta desde ITESA", key=f"btn_{local['id']}", type="primary"):
+                            st.session_state.local_seleccionado = local
+                            st.rerun()
+
+                    with st.expander("Ver Menú / Servicios"):
+                        for prod, precio in local["menu"]:
+                            st.write(f"- {prod}: **{precio}**")
+                    st.divider()
+
+                # Marcador individual del local
+                folium.Marker(
+                    [local["lat"], local["lng"]],
+                    popup=f"<b>{local['nombre']}</b><br>{local['direccion']}<br><b>Pago:</b> {local['pago']}",
+                    icon=folium.Icon(color="red" if local["categoria"] == "Comida" else "purple", icon="info-sign")
+                ).add_to(m)
+
+        # TRAZAR RUTA ÚNICA SI HAY UN LOCAL SELECCIONADO
+        if st.session_state.local_seleccionado:
+            dest = st.session_state.local_seleccionado
+            folium.PolyLine(
+                locations=[[ITESA_LAT, ITESA_LNG], [dest["lat"], dest["lng"]]],
+                color="#FF3333",
+                weight=5,
+                opacity=0.9,
+                dash_array='8, 8'
+            ).add_to(m)
+
+        with col_mapa:
+            st_folium(m, width=800, height=550)
