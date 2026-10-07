@@ -246,7 +246,7 @@ else:
             backdrop-filter: blur(3px);
         ">
             <span>🚗</span>
-            <span>Salida Estacionamiento</span>
+            <span>Salida</span>
         </div>
         """
         folium.Marker(
