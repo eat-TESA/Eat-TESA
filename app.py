@@ -34,6 +34,7 @@ st.markdown("""
 # Coordenadas de puntos de referencia
 ITESA_LAT, ITESA_LNG = 19.728763, -98.467741
 ESTACIONAMIENTO_LAT, ESTACIONAMIENTO_LNG = 19.727963, -98.467674
+
 # Base de datos de establecimientos en Col. Las Peñitas
 ESTABLECIMIENTOS = [
     {
@@ -205,16 +206,17 @@ else:
             centro_lat = st.session_state.local_seleccionado["lat"]
             centro_lng = st.session_state.local_seleccionado["lng"]
 
-        # Crear mapa con capa Satelital ESRI
+        # Crear mapa con capa Satelital ESRI y Zoom ampliado
         m = folium.Map(
             location=[centro_lat, centro_lng],
-            zoom_start=17,
+            zoom_start=18.5,
+            max_zoom=20,
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            attr="Esri World Imagery"
+            attr="Esri World Imagery",
+            max_native_zoom=19
         )
 
         # Marcador de Entrada ITESA
-# Marcador de Entrada ITESA
         html_itesa = """
         <div style="background-color:#003049; color:white; padding:4px 8px; border-radius:10px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
             🏫 ITESA
@@ -226,8 +228,7 @@ else:
             icon=folium.DivIcon(html=html_itesa)
         ).add_to(m)
 
-        # Marcador de Referencia: Salida Estacionamiento
-# Marcador de Referencia: Salida Estacionamiento (Compacto y elegante)
+        # Marcador de Referencia: Salida Estacionamiento (Compacto y transparente)
         html_estacionamiento = """
         <div style="
             display: inline-flex;
@@ -245,7 +246,7 @@ else:
             backdrop-filter: blur(3px);
         ">
             <span>🚗</span>
-            <span>Salida</span>
+            <span>Salida Estacionamiento</span>
         </div>
         """
         folium.Marker(
