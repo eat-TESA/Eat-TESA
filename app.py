@@ -38,30 +38,40 @@ ITESA_LAT, ITESA_LNG = 19.728763, -98.467741
 ESTABLECIMIENTOS = [
     {
         "id": 1,
-        "nombre": "Tacos El Güero",
+        "nombre": "BILLAR",
         "categoria": "Comida",
-        "lat": 19.729500,
-        "lng": -98.466500,
-        "direccion": "Av. Universidad, Col. Las Peñitas",
+        "lat": 19.727554,
+        "lng": -98.467488,
+        "direccion": "Calle Cierra alta, alado del estacionamiento",
         "pago": "Efectivo y Tarjeta",
-        "menu": [("Tacos de pastor", "$15 c/u"), ("Gringas", "$35")]
+        "menu": [("Tacos de pastor", "$15 c/u"), ("Gringas", "$35"),("Guajolotas","$37"),("Sopa instantanea","$37")]
+    },
+     {
+        "id": 3,
+        "nombre": "BILLAR",
+        "categoria": "Entretenimiento",
+        "lat": 19.727560,
+        "lng": -98.467401,
+        "direccion": "Calle Cierra alta, alado del estacionamiento",
+        "pago": "Efectivo y Transferencia",
+        "menu": [("Billar (1 hr)", "$25"), ("Maquinitas", "$1 $5 $10")]
     },
     {
         "id": 2,
-        "nombre": "Antojitos Doña Rosa",
+        "nombre": "Carnitas y asados",
         "categoria": "Comida",
-        "lat": 19.727800,
-        "lng": -98.468900,
+        "lat": 19.727710,
+        "lng": -98.467814,
         "direccion": "Calle Principal #12, Las Peñitas",
         "pago": "Solo Efectivo",
         "menu": [("Gorditas", "$20"), ("Quesadillas", "$18")]
     },
     {
         "id": 3,
-        "nombre": "Ciber & Arcade ITESA",
-        "categoria": "Entretenimiento",
-        "lat": 19.730100,
-        "lng": -98.467000,
+        "nombre": "Comida rapida",
+        "categoria": "Comida",
+        "lat": 19.727560,
+        "lng": -98.467401,
         "direccion": "Frente a la entrada principal ITESA",
         "pago": "Efectivo y Transferencia",
         "menu": [("Renta Xbox (1 hr)", "$25"), ("Impresiones", "$2")]
