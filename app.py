@@ -55,7 +55,7 @@ ESTABLECIMIENTOS = [
         "lng": -98.467401,
         "direccion": "Calle Cierra alta, alado del estacionamiento",
         "pago": "Efectivo y Transferencia",
-        "menu": [("Billar (1 hr)", "$25"), ("Maquinitas", "$1, $5, $10")]
+        "menu": [("Billar (1 hr)", "$25"), ("Maquinitas", "$1", "$5", "$10")]
     },
     {
         "id": 3,
