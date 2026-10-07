@@ -214,6 +214,7 @@ else:
         )
 
         # Marcador de Entrada ITESA
+# Marcador de Entrada ITESA
         html_itesa = """
         <div style="background-color:#003049; color:white; padding:4px 8px; border-radius:10px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
             🏫 ITESA
@@ -223,6 +224,18 @@ else:
             [ITESA_LAT, ITESA_LNG],
             popup="<b>Entrada Principal ITESA</b>",
             icon=folium.DivIcon(html=html_itesa)
+        ).add_to(m)
+
+        # Marcador de Referencia: Salida Estacionamiento
+        html_estacionamiento = """
+        <div style="background-color:#6c757d; color:white; padding:4px 8px; border-radius:10px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
+            🚗 Salida Estacionamiento
+        </div>
+        """
+        folium.Marker(
+            [ESTACIONAMIENTO_LAT, ESTACIONAMIENTO_LNG],
+            popup="<b>Salida Estacionamiento</b>",
+            icon=folium.DivIcon(html=html_estacionamiento)
         ).add_to(m)
 
         # Filtrar locales por categoría
