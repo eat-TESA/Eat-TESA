@@ -5,23 +5,29 @@ from streamlit_folium import st_folium
 # Configuración de la página
 st.set_page_config(page_title="eat-TESA", page_icon="🍴", layout="wide")
 
-# CSS avanzado para ocultar la barra superior y la marca de agua flotante de la esquina inferior derecha
+# CSS para ocultar la barra superior, marcas flotantes y la barra gris de embed ("Built with Streamlit")
 st.markdown("""
     <style>
+    /* Ocultar menú principal y header */
     #MainMenu {visibility: hidden;}
-    footer {visibility: hidden; display: none !important;}
     header {visibility: hidden;}
     [data-testid="stHeader"] {display: none !important;}
     [data-testid="stStatusWidget"] {display: none !important;}
     .stAppToolbar {display: none !important;}
     
-    /* Ocultar insignia flotante inferior derecha (Hosted with Streamlit / Created by) */
+    /* Ocultar pie de página estándar */
+    footer {visibility: hidden; display: none !important;}
+    
+    /* Ocultar la barra gris de Embed ("Built with Streamlit / Fullscreen") */
+    [data-testid="stEmbedFooter"] {display: none !important;}
+    div[class*="embedFooter"] {display: none !important;}
+    
+    /* Ocultar insignias flotantes de la esquina inferior derecha */
     div[data-testid="stViewerBadge"] {display: none !important;}
     [class*="viewerBadge"] {display: none !important;}
     [class*="styles_viewerBadge"] {display: none !important;}
     .viewerBadge_container__1tA6D {display: none !important;}
     a[href*="streamlit.io"] {display: none !important;}
-    iframe[title="data_frame"] {display: none !important;}
     </style>
 """, unsafe_allow_html=True)
 
