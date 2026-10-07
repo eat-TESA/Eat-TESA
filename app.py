@@ -5,6 +5,16 @@ from streamlit_folium import st_folium
 # Configuración de la página
 st.set_page_config(page_title="eat-TESA", page_icon="🍴", layout="wide")
 
+# Ocultar la barra superior (Fork, GitHub, etc.) y el pie de página
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    [data-testid="stHeader"] {display: none;}
+    </style>
+""", unsafe_allow_html=True)
+
 # Coordenadas exactas del ITESA
 ITESA_LAT, ITESA_LNG = 19.728763, -98.467741
 
