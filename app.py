@@ -31,9 +31,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Coordenadas exactas del ITESA
+# Coordenadas de puntos de referencia
 ITESA_LAT, ITESA_LNG = 19.728763, -98.467741
-
+ESTACIONAMIENTO_LAT, ESTACIONAMIENTO_LNG = 19.727963, -98.467674
 # Base de datos de establecimientos en Col. Las Peñitas
 ESTABLECIMIENTOS = [
     {
