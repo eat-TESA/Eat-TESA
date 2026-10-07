@@ -151,7 +151,7 @@ else:
     # Menú de Navegación
     col_nav1, col_nav2 = st.columns(2)
     with col_nav1:
-        if st.button("🏠 Inicio / Dashboard", use_container_width=True):
+        if st.button("🏠 Inicio", use_container_width=True):
             st.session_state.pagina = "dashboard"
             st.rerun()
     with col_nav2:
@@ -209,8 +209,8 @@ else:
         # Crear mapa con capa Satelital ESRI y Zoom ampliado
         m = folium.Map(
             location=[centro_lat, centro_lng],
-            zoom_start=18.5,
-            max_zoom=20,
+            zoom_start=17,
+            max_zoom=18,
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri World Imagery",
             max_native_zoom=19
