@@ -99,7 +99,7 @@ if not st.session_state.autenticado:
     p_login, p_reg = st.tabs(["Iniciar Sesión", "Registrarse"])
 
     with p_login:
-        email_login = st.text_input("Correo Institucional ITESA", placeholder="tu_matricula@itesa.edu.mx")
+        email_login = st.text_input("Correo Institucional ITESA", placeholder="Correo Institucional")
         pass_login = st.text_input("Contraseña", type="password", key="l_pass")
         if st.button("Ingresar a eat-TESA", type="primary"):
             email_clean = email_login.strip().lower()
