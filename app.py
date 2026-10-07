@@ -46,7 +46,7 @@ ESTABLECIMIENTOS = [
         "pago": "Efectivo y Tarjeta",
         "menu": [("Tacos de pastor", "$15 c/u"), ("Gringas", "$35"),("Guajolotas","$37"),("Sopa instantanea","$37")]
     },
-     {
+    {
         "id": 2,
         "nombre": "BILLAR",
         "categoria": "Entretenimiento",
@@ -74,7 +74,7 @@ ESTABLECIMIENTOS = [
         "lng": -98.467401,
         "direccion": "Frente a la entrada principal ITESA",
         "pago": "Efectivo y Transferencia",
-        "menu": [("Renta Xbox (1 hr)", "$25"), ("Impresiones", "$2")]
+        "menu": [("Gorditas", "$20"), ("Torta de jamon", "$30")]
     }
 ]
 
@@ -87,6 +87,8 @@ if "pagina" not in st.session_state:
     st.session_state.pagina = "dashboard"
 if "local_seleccionado" not in st.session_state:
     st.session_state.local_seleccionado = None
+if "categoria_filtro" not in st.session_state:
+    st.session_state.categoria_filtro = "Todos"
 
 # --- LOGIN Y REGISTRO ---
 if not st.session_state.autenticado:
@@ -140,6 +142,7 @@ else:
             st.session_state.usuario_email = ""
             st.session_state.pagina = "dashboard"
             st.session_state.local_seleccionado = None
+            st.session_state.categoria_filtro = "Todos"
             st.rerun()
 
     st.divider()
@@ -152,6 +155,7 @@ else:
             st.rerun()
     with col_nav2:
         if st.button("🗺️ Ver Mapa Interactivo", use_container_width=True):
+            st.session_state.categoria_filtro = "Todos"
             st.session_state.pagina = "mapa"
             st.rerun()
 
@@ -167,6 +171,7 @@ else:
             st.subheader("🍕 Comida")
             st.write("Establecimientos para comer cerca del campus.")
             if st.button("Explorar Comida ➔"):
+                st.session_state.categoria_filtro = "Comida"
                 st.session_state.pagina = "mapa"
                 st.rerun()
 
@@ -174,6 +179,7 @@ else:
             st.subheader("🎮 Entretenimiento")
             st.write("Cibercafés, videojuegos y áreas de descanso.")
             if st.button("Explorar Entretenimiento ➔"):
+                st.session_state.categoria_filtro = "Entretenimiento"
                 st.session_state.pagina = "mapa"
                 st.rerun()
 
@@ -181,7 +187,15 @@ else:
     elif st.session_state.pagina == "mapa":
         st.header("🗺️ Mapa de Establecimientos y Rutas")
         
-        cat_filtro = st.selectbox("Filtrar por categoría:", ["Todos", "Comida", "Entretenimiento"])
+        opciones_categoria = ["Todos", "Comida", "Entretenimiento"]
+        idx_filtro = opciones_categoria.index(st.session_state.categoria_filtro) if st.session_state.categoria_filtro in opciones_categoria else 0
+
+        cat_filtro = st.selectbox(
+            "Filtrar por categoría:", 
+            opciones_categoria, 
+            index=idx_filtro
+        )
+        st.session_state.categoria_filtro = cat_filtro
         
         col_lista, col_mapa = st.columns([1, 2])
 
@@ -189,82 +203,4 @@ else:
         centro_lat, centro_lng = ITESA_LAT, ITESA_LNG
         if st.session_state.local_seleccionado:
             centro_lat = st.session_state.local_seleccionado["lat"]
-            centro_lng = st.session_state.local_seleccionado["lng"]
-
-        # Crear mapa con capa Satelital ESRI
-        m = folium.Map(
-            location=[centro_lat, centro_lng],
-            zoom_start=17,
-            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            attr="Esri World Imagery"
-        )
-
-        # Marcador de Entrada ITESA
-        html_itesa = """
-        <div style="background-color:#003049; color:white; padding:4px 8px; border-radius:10px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
-            🏫 ITESA
-        </div>
-        """
-        folium.Marker(
-            [ITESA_LAT, ITESA_LNG],
-            popup="<b>Entrada Principal ITESA</b>",
-            icon=folium.DivIcon(html=html_itesa)
-        ).add_to(m)
-
-        # Filtrar locales por categoría
-        locales_visibles = [
-            l for l in ESTABLECIMIENTOS 
-            if cat_filtro == "Todos" or l["categoria"] == cat_filtro
-        ]
-
-        with col_lista:
-            st.subheader("Establecimientos")
-            st.caption("Selecciona uno para trazar la ruta desde ITESA:")
-
-            for local in locales_visibles:
-                es_seleccionado = (
-                    st.session_state.local_seleccionado is not None and 
-                    st.session_state.local_seleccionado["id"] == local["id"]
-                )
-
-                # Tarjeta del establecimiento con botón de trazado
-                with st.container():
-                    st.markdown(f"### 📍 {local['nombre']}")
-                    st.write(f"**Ubicación:** {local['direccion']}")
-                    st.write(f"**Pago:** {local['pago']}")
-
-                    # Botón para trazar o quitar ruta
-                    if es_seleccionado:
-                        if st.button(f"❌ Ocultar Ruta", key=f"btn_{local['id']}"):
-                            st.session_state.local_seleccionado = None
-                            st.rerun()
-                    else:
-                        if st.button(f"🗺️ Trazar Ruta desde ITESA", key=f"btn_{local['id']}", type="primary"):
-                            st.session_state.local_seleccionado = local
-                            st.rerun()
-
-                    with st.expander("Ver Menú / Servicios"):
-                        for prod, precio in local["menu"]:
-                            st.write(f"- {prod}: **{precio}**")
-                    st.divider()
-
-                # Marcador individual del local
-                folium.Marker(
-                    [local["lat"], local["lng"]],
-                    popup=f"<b>{local['nombre']}</b><br>{local['direccion']}<br><b>Pago:</b> {local['pago']}",
-                    icon=folium.Icon(color="red" if local["categoria"] == "Comida" else "purple", icon="info-sign")
-                ).add_to(m)
-
-        # TRAZAR RUTA ÚNICA SI HAY UN LOCAL SELECCIONADO
-        if st.session_state.local_seleccionado:
-            dest = st.session_state.local_seleccionado
-            folium.PolyLine(
-                locations=[[ITESA_LAT, ITESA_LNG], [dest["lat"], dest["lng"]]],
-                color="#FF3333",
-                weight=5,
-                opacity=0.9,
-                dash_array='8, 8'
-            ).add_to(m)
-
-        with col_mapa:
-            st_folium(m, width=800, height=550)
+            centro_lng =
